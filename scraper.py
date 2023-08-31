@@ -9,8 +9,12 @@ import json
 
 
 # Item we want to search on Woolworths
-item_to_search = 'soup'
+item_to_search = 'baked beans'
 url = 'https://www.woolworths.com.au/shop/search/products?searchTerm=' + item_to_search
+
+driver_path = '/utils/chromedriver.exe'
+driver = webdriver.Chrome(ChromeDriverManager().install())
+
 
 # List to store product links we find
 product_links = []
@@ -18,8 +22,6 @@ product_links = []
 # Function to get and parse the data from a given URL
 def getdata(url):
     # Path to your driver executable (this path is not used since you use ChromeDriverManager().install() later)
-    driver_path = '/utils/chromedriver.exe'
-    driver = webdriver.Chrome(ChromeDriverManager().install())
     driver.get(url)
     sleep(5)
     html = driver.page_source
@@ -72,8 +74,23 @@ def get_item_info(sku):
 
     response = requests.request("GET", url, headers=headers, data=payload)
     data = response.json()
-    print(data['NutritionalInformation'][0]['Values']['Quantity Per 100g / 100mL'])
-    return
+
+    try:
+        print(data['Product']['Name'])
+        print('kJ: ' + data['NutritionalInformation'][0]['Values']['Quantity Per 100g / 100mL'])
+        print(data['NutritionalInformation'][1]['Name'] + " " + data['NutritionalInformation'][1]['Values']['Quantity Per 100g / 100mL'])
+        print(data['NutritionalInformation'][2]['Name'] + " " + data['NutritionalInformation'][2]['Values']['Quantity Per 100g / 100mL'])
+        print(data['NutritionalInformation'][3]['Name'] + " " + data['NutritionalInformation'][3]['Values']['Quantity Per 100g / 100mL'])
+        print(data['NutritionalInformation'][4]['Name'] + " " + data['NutritionalInformation'][4]['Values']['Quantity Per 100g / 100mL'])
+        print(data['NutritionalInformation'][5]['Name'] + " " + data['NutritionalInformation'][5]['Values']['Quantity Per 100g / 100mL'])
+        print(data['NutritionalInformation'][6]['Name'] + " " + data['NutritionalInformation'][6]['Values']['Quantity Per 100g / 100mL'])
+        print(data['NutritionalInformation'][7]['Name'] + " " + data['NutritionalInformation'][7]['Values']['Quantity Per 100g / 100mL'])
+        print("\n")
+        return
+    except:
+        print("No nutrition data")
+
+    
 
     #print(data)
 
@@ -84,6 +101,6 @@ def get_item_info(sku):
 
 
 getdata(url)
-
+print(product_links)
 loop_through_items(product_links)
 #get_item_info()
